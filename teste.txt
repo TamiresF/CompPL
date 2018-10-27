@@ -1,4 +1,4 @@
-// Isso È um coment·rio
+// Isso √© um coment√°rio
 
 pl var char COMPILADOR endvar
 
