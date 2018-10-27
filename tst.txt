@@ -1,0 +1,34 @@
+// Isso é um comentário
+
+pl var char COMPILADOR endvar
+
+Int  A;
+Int B;
+Char FRASE;
+Char ALFA;
+Real FLOAT;
+Bool TRIGGER;
+
+A = 8;
+B = 5;
+FRASE = "Testando uma frase";
+ALFA = 'X';
+FLOAT = 45.755;
+TRIGGER = 1;
+
+Int   INCREMENTA 			(noparam)	{
+Int X;
+For(X = 1;X <= SOMA;X=X+1)
+    FLOAT = FLOAT + X;
+endfunc
+
+bool CALCULO (Int A, Int B){
+	int X;
+	X = 1;
+	While (X < A .or. X = 10.5)
+		X = X + 1;
+	If	(X - B == 0)
+		Return 1;
+	Else
+		Return 0;
+endfunc
