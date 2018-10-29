@@ -11,11 +11,13 @@ int main()
     char arq[100];
 	FILE* fp;
 
-	printf ("Arquivo de Entrada: ");
-	gets (arq);
-	fflush (stdin);
+    printf ("Arquivo de Entrada: teste.txt\n \n");
+	printf ("Tokens:");
 
-    if ((fp = fopen (arq, "r")) == NULL) {
+	//gets (arq);
+	//fflush (stdin);
+
+    if ((fp = fopen ("teste.txt", "r")) == NULL) {
 		printf ("\n\tErro na abertura de arquivo.\n");
         system("pause");
         exit(0);
