@@ -3,56 +3,98 @@
 
 #include "AnLexico.h"
 
-int contLinha = 1; //contador de linhas
+int ctlinha = 1; //contador de linhas
 
 int main()
 {
-	Token token;
-    char arq[100];
-	FILE* fp;
+  Token token;
+    char arq[20];
+  FILE* file;
 
-    printf ("Arquivo de Entrada: teste.txt\n \n");
-	printf ("Tokens:");
+  printf ("Nome do arquivo: ");
+  gets (arq); //armazena nome do arquivo
 
-	//gets (arq);
-	//fflush (stdin);
-
-    if ((fp = fopen ("teste.txt", "r")) == NULL) {
-		printf ("\n\tErro na abertura de arquivo.\n");
+    if ((file = fopen (arq, "r")) == NULL) {
+    printf ("\nErro ao abrir arquivo.\n");
         system("pause");
         exit(0);
-	}
+  }
+  Identificadores tbID[2000];
+  lex(file);
+  while (!feof (file)) {
+    sintatico(file);
+  }
 
-	while (!feof (fp)) {
-
-		token = analex(fp); //analisador lexico (retorna proximo token)
-
-		imprimirToken(token); //exibi as informacoes do token
-	}
-
-	if (fclose(fp)) { //retorna zero se a operação de fechamento for bem-sucedida
-		printf ("\n\tErro ao fechar o arquivo.");
-		system("pause");
-		exit(0);
-	}
+  if (fclose(file)) {
+    printf ("\nErro ao fechar o arquivo.");
+    system("pause");
+    exit(0);
+  }
 }
 
-char tabPR [100][100] = { //tabela de simbolos de palavras-reservadas
-	"pl",	"var",	"endvar",	"prog",
-	"endprog", "Char",	"Int",	"Real",
-	"Bool",	"noparam", "enffunc", "fwd",
-	"proc", "endproc", "If", "endif",
-	"While", "endwhile", "For", "endfor",
-	"Return", "call", "keybord", "display"
+void imprime(Token token) {
+
+  switch (token.tipo) {
+
+  case PR:
+    printf ("\n\n<PR, %s ,%d>", token.lexema, token.valor.codPR);
+    break;
+
+  case ID:
+    printf ("\n\n<ID, %s>",token.lexema);
+    break;
+
+  case CTL:
+    printf ("\n\n<CTL, %s , %d>", tbCstring[token.valor.posLiteral], token.valor.posLiteral);
+    break;
+
+  case CTI:
+    printf ("\n\n<CTI,%d>", token.valor.valorInt);
+    break;
+
+  case CTC:
+    if (token.valor.valorInt == -1) printf ("\n\n<CTC,  >");
+    else if (token.valor.valorInt == '\n') printf ("\n\n<CTC,\n>");
+    else if (token.valor.valorInt == '\0') printf ("\n\n<CTC,\0>");
+    else printf ("\n\n<CTC, %c>", token.valor.valorInt);
+    break;
+
+  case SN:
+    printf ("\n\n<SN, %s ,%d>", token.lexema, token.valor.codSN);
+    break;
+
+  case CTR:
+    printf ("\n\n<CTR, %f>", token.valor.valorReal);
+    break;
+
+  case TKI:
+
+    break;
+  }
+}
+//tabela palavras reservadas
+char tbPR [13][13] = {
+  "Char",
+  "Int",
+  "Real",
+  "Bool",
+  "If",
+  "Else",
+  "While",
+  "func",
+  "noparam",
+  "pl",
+  "return",
+  "fwd",
+  "For"
+};
+//tabela sinais
+char tbSN [20][3] = {
+  "==", "=",  ".and.", ".or.", ";",
+  ",",  "(",  ")",  "{",  "}"
+  "#", ".not.",  "+",  "-",  "*",
+  "/",  "<=", "<",  ">=", ">",
 };
 
-char tabSN [20][3] = { //tabela de simbolos de sinais
-	"#",	".not.",	"+",	"-",	"*",
-	"/",	"<=",	"<",	">=",	">",
-	"==",	"=",	".and.",	".or.",	";",
-	",",	"(",	")",	"{",	"}"
-};
-
-char tabCTL [255][255];   //tabela de simbolos de constantes literais
-int posUltimaCTL = -1;    //indica a posicao da ultima constante literal inserida na tabCTL
-
+char tbCstring [255][255];   //tabela para guardar as constantes literais
+int posFinal = -1;           //indica a posição da ultima constante inserida

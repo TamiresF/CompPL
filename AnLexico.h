@@ -3,46 +3,25 @@
 #include <ctype.h>
 #include <string.h>
 
-//tabela palavras reservadas da linguagem PL
+//tabela palavras reservadas
 typedef enum palReservada {
-    pl,
-    var,
-    endvar,
-    prog,
-    endprog,
 	Char,
 	Int,
 	Real,
 	Bool,
-	noparam,
-	enffunc,
-	fwd,
-	proc,
-	endproc,
-	se,
-    endif,
+	If,
+	Else,
 	While,
-	endwhile,
-	For,
-	endfor,
+	func,
+	noparam,
+	pl,
 	Return,
-	call,
-	keybord,
-	display
+	fwd,
+	For
 }PalReservada;
 
 //tabela sinal
 typedef enum sinal{
-	sn_diferente,
-	sn_negacao,
-	sn_mais,
-	sn_menos,
-	sn_vezes,
-	sn_divisao,
-	sn_menor_igual,
-	sn_menor,
-	sn_maior_igual,
-	sn_maior,
 	sn_igualdade,
 	sn_atribuicao,
 	sn_and,
@@ -52,13 +31,29 @@ typedef enum sinal{
 	sn_abre_parentese,
 	sn_fecha_parentese,
 	sn_abre_chave,
-	sn_fecha_chave
+	sn_fecha_chave,
+	sn_diferente,
+	sn_negacao,
+	sn_mais,
+	sn_menos,
+	sn_vezes,
+	sn_divisao,
+	sn_menor_igual,
+	sn_menor,
+	sn_maior_igual,
+	sn_maior
 }Sinal;
 
 typedef enum categoria {
-	PR, ID, CTL,
-	CTI, CTC, SN,
-	CTR
+	PR,  //palavra reservada
+	ID,  //identificador
+	CTL, //cadeiacon
+	CTI, //intcon
+	CTC, //caraccon
+	SN,  //sinal
+	CTR,  //realcon
+	TKI,	//Token Invalido
+	EF		//Final de Arquivo
 }Categoria;
 
 //Estrutura do token
@@ -75,19 +70,25 @@ struct token {
 };
 typedef struct token Token;
 
-extern char tabPR [100][100];        //tabela de simbolos de palavras-reservadas
-extern char tabSN [20][3];         //tabela de simbolos de sinais
-extern char tabCTL [255][255];	   //tabela de simbolos de constantes literais
-extern int posUltimaCTL;		   //indica a posicao da ultima constante literal inserida na tabCTL
-extern int contLinha;              //contador de linhas
+struct ids {
+	char nome[30];
+	char tipo[13];
+	char escopo[8];
+	char categoria[6];
+};
+typedef struct ids Identificadores;
+
+extern char tbPR [13][13];         //tabela de palavras-reservadas
+extern char tbSN [20][3];          //tabela de simbolos de sinais
+extern char tbCstring [255][255];  //tabela de constantes strings
+extern int posFinal;               //indica posição da ultima string inserida na tabela de literais
+extern int ctlinha;                // contador de linha
 
 //Assinatura das funcoes
-FILE* abrirArq ();
-void pausa ();
-Token analex(FILE*);
-void erro (int);
-int buscarTabPR(char []);
-int inserirTabCTL(char []);
-void imprimirToken(Token);
-void fecharArq (FILE*);
+Token token;
+Token lexico(FILE*);
+int buscarPR(char []);
+int inserirTbCstring(char []);
+void imprime(Token);
+
 
